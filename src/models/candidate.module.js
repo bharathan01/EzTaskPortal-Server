@@ -1,36 +1,41 @@
-const { Shcema, Mongoose, Schema } = require("mongoose");
+const { Shcema, Mongoose } = require("mongoose");
 
 const candidate = new Shcema(
   {
     username: {
       type: String,
-      require: true,
+      required:true,
       unique: true,
     },
     fullname: {
       type: String,
-      require: true,
+      required:true,
     },
     email: {
       type: String,
-      require: true,
+      required:true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required:true
     },
     profileimage: {
       type: String,
+      required:true,
+      default:''
     },
     about: {
       type: string,
+      required:true
     },
     experiance: {
       type: string,
+      required:true
     },
     skills: {
       type: [],
+      required:true
     },
     jobrole: {
       type: string,
@@ -38,7 +43,7 @@ const candidate = new Shcema(
     },
     resume: {
       type: string,
-      require: true,
+      required:true
     },
     appliedJob: [
       {
@@ -53,6 +58,7 @@ const candidate = new Shcema(
     ],
     refreshtoken: {
       type: string,
+      required:true
     },
   },
   {
