@@ -1,67 +1,73 @@
-const { Shcema, Mongoose } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const candidate = new Shcema(
+const candidateSchema = new Schema(
   {
     username: {
       type: String,
-      required:true,
+      required: true,
       unique: true,
     },
     fullname: {
       type: String,
-      required:true,
+      required: true,
     },
     email: {
       type: String,
-      required:true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      required:true
+      required: true,
     },
     profileimage: {
       type: String,
-      required:true,
-      default:''
+      required: true,
+      default: '',
     },
     about: {
-      type: string,
-      required:true
+      type: String, 
+      required: true,
     },
-    experiance: {
-      type: string,
-      required:true
+    experience: {
+      type: String, 
+      required: true,
     },
     skills: {
-      type: [],
-      required:true
+      type: [String], 
+      required: true,
     },
     jobrole: {
-      type: string,
-      require: true,
+      type: String,
+      required: true,
+    },
+    educationDetails: {
+      type: [String], 
+      required: true,
     },
     resume: {
-      type: string,
-      required:true
+      type: String,
+      required: true,
     },
     appliedJob: [
       {
         type: Schema.Types.ObjectId,
         ref: "jobsDetails",
         status: {
-          type: string,
+          type: String, 
           enum: ["Apply", "In Progress", "Rejected"],
           default: "Apply",
         },
       },
     ],
-    refreshtoken: {
-      type: string,
-      required:true
+    refreshToken: {
+      type: String,
+      required: true,
     },
   },
   {
-    timeStamps: true,
+    timestamps: true, 
   }
 );
+
+module.exports = model("candidates", candidateSchema);

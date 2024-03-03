@@ -1,6 +1,6 @@
 const req = require('express/lib/request')
 const { type } = require('express/lib/response')
-const {Schema,mongoose} = require('mongoose')
+const {Schema,model} = require('mongoose')
 
 
 const jobDetail = new Schema ({
@@ -41,18 +41,4 @@ const jobDetail = new Schema ({
 })
 
 
-
-// //Table Job {
-//     _id integer 
-//     title varchar
-//     discription text [note: 'Content of the post']
-//     jobPostedBy integer
-//     upated_at timestamp
-//     created_at timestamp
-//     jobrole varchar
-//     applybefore timestamp
-//     experiancelevel varchar
-//     jobskills array
-//   }
-
-module.exports = mongoose.models('jobDetails', jobDetail)
+module.exports = model('jobDetails', jobDetail)
