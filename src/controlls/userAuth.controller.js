@@ -1,5 +1,5 @@
 const router = require("../routes/user.route.js");
-const { ApiResponse } = require("../utils/apiResponce.js");
+const ApiResponce = require("../utils/apiResponce.js");
 const errorHandler = require("../utils/errorHander.js");
 
 const registerNewUser = (req, res) => {
@@ -8,9 +8,10 @@ const registerNewUser = (req, res) => {
     if (!body.email) {
       throw new errorHandler(400, "email is require");
     }
-    const data = new ApiResponse(200,body,"email is obtained");
+    new ApiResponce(200, body, "email is obtained", res);
   } catch (error) {
-     return res.status(error.statusCode || 500).json({ error: error.message });
+    throw new errorHandler(500, error.message);
+    // return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
