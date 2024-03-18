@@ -2,8 +2,8 @@
    [x] mongodb errors
    [X] controllers error
    [x] server error.
-[] common response handling methode.
-[] app.js
+[X] common response handling methode.
+[X] app.js
 [] image upload setup (cloudenari)
 [] common moddelware.
    [] validatating ref token.

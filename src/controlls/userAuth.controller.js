@@ -15,4 +15,8 @@ const registerNewUser = (req, res) => {
   }
 };
 
-module.exports = registerNewUser;
+const loginUser = (req, res) => {
+  new ApiResponce(200,"data0","loguser",res)
+};
+
+module.exports = { registerNewUser, loginUser };
