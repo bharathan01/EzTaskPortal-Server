@@ -24,32 +24,28 @@ const candidateSchema = new Schema(
     },
     profileimage: {
       type: String,
-      required: true,
-      default: '',
+      // required: true,
+      // default: '',
     },
     about: {
       type: String, 
-      required: true,
+  
     },
     experience: {
       type: String, 
-      required: true,
+
     },
     skills: {
       type: [String], 
-      required: true,
     },
     jobrole: {
       type: String,
-      required: true,
     },
     educationDetails: {
       type: [String], 
-      required: true,
     },
     resume: {
       type: String,
-      required: true,
     },
     appliedJob: [
       {
@@ -64,7 +60,7 @@ const candidateSchema = new Schema(
     ],
     refreshToken: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   {
@@ -72,7 +68,7 @@ const candidateSchema = new Schema(
   }
 );
 
-candidateSchema.pre('save',async(next)=>{
+candidateSchema.pre('save',async function (next){
    if(!this.isModified('password')) return next()
    try{
     this.password = await hashPassword(this.password);
@@ -80,7 +76,5 @@ candidateSchema.pre('save',async(next)=>{
      throw new errorHandler(500, error.message)
   }
 })
-
-
 
 module.exports = model("candidates", candidateSchema);
