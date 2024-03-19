@@ -1,4 +1,6 @@
 const { Schema, model } = require("mongoose");
+const { hashPassword } = require("../utils/passwordHash");
+const errorHandler = require("../utils/errorHander");
 
 const candidateSchema = new Schema(
   {
@@ -69,5 +71,16 @@ const candidateSchema = new Schema(
     timestamps: true, 
   }
 );
+
+candidateSchema.pre('save',async(next)=>{
+   if(!this.isModified('password')) return next()
+   try{
+    this.password = await hashPassword(this.password);
+  }catch(error){
+     throw new errorHandler(500, error.message)
+  }
+})
+
+
 
 module.exports = model("candidates", candidateSchema);
