@@ -13,12 +13,12 @@ const registerNewUser = async (req, res) => {
     const user = await candidatesModel.create({
       username,
       fullname,
-      password,
+      password, 
       email,
     });
     if (!user) {
       throw new errorHandler(401, "user not created");
-    }
+    } 
     new ApiResponce(200, user, "user created successfully", res);
   } catch (error) {
     throw new errorHandler(500, error.message);
@@ -31,3 +31,4 @@ const loginUser = (req, res) => {
 };
 
 module.exports = { registerNewUser, loginUser };
+ 
