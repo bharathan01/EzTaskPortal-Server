@@ -6,7 +6,7 @@ const errorHandlerSwitch = require("./utils/errorHanderSwitch.js");
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extends: true, limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
 app.use("/api/v2/users", userRouter);
 

@@ -9,7 +9,7 @@ const registerNewUser = async (req, res) => {
     const fields = [username, fullname, password, email]
     if (fields.some((field) => !field || field.trim()==="")){
       throw new errorHandler(400, "all fields are require");
-    }
+    } 
     const user = await candidatesModel.create({
       username,
       fullname,
@@ -17,7 +17,7 @@ const registerNewUser = async (req, res) => {
       email,
     });
     if (!user) {
-      throw new errorHandler(401, "user not created");
+      throw new errorHandler(401, "user not created"); 
     } 
     new ApiResponce(200, user, "user created successfully", res);
   } catch (error) {
