@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { hashPassword } = require("../utils/passwordHash");
+const { hashPassword, compearPassword } = require("../utils/passwordHash");
 const errorHandler = require("../utils/errorHander");
 
 const candidateSchema = new Schema(
@@ -28,21 +28,19 @@ const candidateSchema = new Schema(
       // default: '',
     },
     about: {
-      type: String, 
-  
+      type: String,
     },
     experience: {
-      type: String, 
-
+      type: String,
     },
     skills: {
-      type: [String], 
+      type: [String],
     },
     jobrole: {
       type: String,
     },
     educationDetails: {
-      type: [String], 
+      type: [String],
     },
     resume: {
       type: String,
@@ -52,7 +50,7 @@ const candidateSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "jobsDetails",
         status: {
-          type: String, 
+          type: String,
           enum: ["Apply", "In Progress", "Rejected"],
           default: "Apply",
         },
@@ -64,17 +62,17 @@ const candidateSchema = new Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-candidateSchema.pre('save',async function (next){
-   if(!this.isModified('password')) return next()
-   try{
+candidateSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  try {
     this.password = await hashPassword(this.password);
-  }catch(error){
-     throw new errorHandler(500, error.message)
+  } catch (error) {
+    throw new errorHandler(500, error.message);
   }
-})
-
+});
+candidateSchema.methods.compearPassword(password, this.password);
 module.exports = model("candidates", candidateSchema);
