@@ -1,7 +1,7 @@
 const express = require("express");
 const userRouter = require("./routes/user.route");
-const errorHander = require("./utils/errorHander.js");
-const errorHandlerSwitch = require("./utils/errorHanderSwitch.js");
+const errorHander = require("./utils/errorHandler.js");
+const error = require("./middleware/error.js")
 
 const app = express();
 
@@ -15,6 +15,6 @@ app.use("/api/v2/users", userRouter);
 app.all("*", (req, res) => {
   throw new errorHander(400, "page not found..!");
 });
-app.use(errorHandlerSwitch)
+app.use(error)
 
 module.exports = app;

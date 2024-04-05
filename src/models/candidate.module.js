@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { hashPassword, comparePassword } = require("../utils/passwordHash");
-const errorHandler = require("../utils/errorHander");
+const errorHandler = require("../utils/errorHandler");
 
 const candidateSchema = new Schema(
   {
