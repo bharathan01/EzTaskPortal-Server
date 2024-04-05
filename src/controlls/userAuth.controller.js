@@ -28,21 +28,24 @@ const registerNewUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
+
   const { username, email, password } = req.body;
-  if (!username && email) {
-    throw new errorHandler(401, "please provide email or username");
+  const userIdentifier = username ? { username } : { email };
+
+  if (!userIdentifier) {
+    throw new errorHandler(401, "please provide email or username"); 
   }
   if (!password) {
     throw new errorHandler(401, "please provide password");
   }
-  const userIdentifier = username ? { username } : { email };
 
   const loginingUser = await candidateModule.findOne(userIdentifier);
-  if(!loginingUser){
-     throw new errorHandler(400,"Invalid user creadentials.")
+  if (!loginingUser) {
+    throw new errorHandler(400, "Invalid user creadentials.");
   }
-  if(!(await candidatesModel.compearPassword(password))){
-    throw new errorHandler(400,"Invalid user creadentials.")
+
+  if (!(await loginingUser.validatePassword(password))) {
+    throw new errorHandler(400, "Invalid user creadentials.");
   }
   new ApiResponce(200, loginingUser, "success", res);
 };

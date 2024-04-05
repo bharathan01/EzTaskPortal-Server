@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { hashPassword, compearPassword } = require("../utils/passwordHash");
+const { hashPassword, comparePassword } = require("../utils/passwordHash");
 const errorHandler = require("../utils/errorHander");
 
 const candidateSchema = new Schema(
@@ -74,5 +74,7 @@ candidateSchema.pre("save", async function (next) {
     throw new errorHandler(500, error.message);
   }
 });
-candidateSchema.methods.compearPassword(password, this.password);
+candidateSchema.methods.validatePassword = async function (password) {
+  return await comparePassword(password, this.password);
+};
 module.exports = model("candidates", candidateSchema);
