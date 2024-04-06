@@ -1,5 +1,4 @@
 const router = require("../routes/user.route.js");
-const ApiResponce = require("../utils/apiResponce.js");
 const errorHandler = require("../utils/errorHandler.js");
 const candidatesModel = require("../models/candidate.module.js");
 const candidateModule = require("../models/candidate.module.js");
@@ -26,8 +25,8 @@ const registerNewUser = asyncTryCatchHandler(async (req, res) => {
   if (!user) {
     throw new errorHandler(500, "can't register new user, try after sometime");
   }
-  const userInfo = userWithoutSensitiveInfo(user)
-  new ApiResponce(200, userInfo, "user created successfully", res);
+  const userInfo = userWithoutSensitiveInfo(user);
+  return res.status(200).json({data:userInfo,messge:"user created successfully"})
 });
 
 const loginUser = asyncTryCatchHandler(async (req, res) => {
@@ -65,10 +64,15 @@ const loginUser = asyncTryCatchHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET_KEY,
     "1d"
   );
-  userInfo.accessToken = accessToken;
-  userInfo.refreshToken = refreshToken;
-
-  new ApiResponce(200, userInfo, "success", res);
+const options = {
+  httpOnly:true,
+  secure:true
+}
+return res.status(200)
+.cookie('refreshToken',refreshToken,options)
+.cookie("accessToken",accessToken,options)
+.json({data:userInfo,messge:"login successfully"})
 });
 
 module.exports = { registerNewUser, loginUser };
+//.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
