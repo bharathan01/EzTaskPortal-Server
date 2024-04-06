@@ -4,6 +4,7 @@ const errorHandler = require("../utils/errorHandler.js");
 const candidatesModel = require("../models/candidate.module.js");
 const candidateModule = require("../models/candidate.module.js");
 const asyncTryCatchHandler = require("../utils/asyncTryCatchHandler.js");
+const generateAccessAndRefreshToken = require("../utils/jwtTokenGenerator.js");
 
 const registerNewUser = asyncTryCatchHandler(async (req, res) => {
   const { username, fullname, password, email } = req.body;
@@ -24,7 +25,6 @@ const registerNewUser = asyncTryCatchHandler(async (req, res) => {
 });
 
 const loginUser = asyncTryCatchHandler(async (req, res) => {
-
   const { username, email, password } = req.body;
   const userIdentifier = username ? { username } : { email };
   if (!username && !email) {
@@ -34,15 +34,37 @@ const loginUser = asyncTryCatchHandler(async (req, res) => {
     throw new errorHandler(401, "please provide password");
   }
 
-  const loginingUser = await candidateModule.findOne(userIdentifier);
-  if (!loginingUser) {
+  const loginUser = await candidateModule.findOne(userIdentifier);
+  // .select("-password -refreshToken");
+  if (!loginUser) {
+    throw new errorHandler(400, "Invalid user creadentials.");
+  }
+  if (!(await loginUser.validatePassword(password))) {
     throw new errorHandler(400, "Invalid user creadentials.");
   }
 
-  if (!(await loginingUser.validatePassword(password))) {
-    throw new errorHandler(400, "Invalid user creadentials.");
-  }
-  new ApiResponce(200, loginingUser, "success", res);
+  const playloadForToken = {
+    _id: loginUser._id,
+    username: loginUser.username,
+    email: loginUser.email,
+    fullname: loginUser.fullname,
+  };
+
+  const accessToken = generateAccessAndRefreshToken(
+    playloadForToken,
+    process.env.ACCESS_TOKEN_SECRET_KEY,
+    "15m"
+  );
+  const refreshToken = generateAccessAndRefreshToken(
+    playloadForToken,
+    process.env.REFRESH_TOKEN_SECRET_KEY,
+    "1d"
+  );
+
+  loginUser.accessToken = accessToken;
+  loginUser.refreshToken = refreshToken;
+
+  new ApiResponce(200, loginUser, "success", res);
 });
 
 module.exports = { registerNewUser, loginUser };

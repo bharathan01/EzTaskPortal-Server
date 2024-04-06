@@ -12,8 +12,8 @@
    [] route for candidate.
    [] route for job provider
 [] controlls.
-   [] logIn
-   [] register
+   [x] logIn
+   [x] register
    [] what candidate get
       [] candidate profile manage (curd)
          [] add/update/delete skills,education,experience and profile
