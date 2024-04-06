@@ -45,7 +45,10 @@ const candidateSchema = new Schema(
     resume: {
       type: String,
     },
-    appliedJob: [
+    refreshToken: {
+      type: String,
+    },
+    appliedJob:[
       {
         type: Schema.Types.ObjectId,
         ref: "jobsDetails",
@@ -56,10 +59,7 @@ const candidateSchema = new Schema(
         },
       },
     ],
-    refreshToken: {
-      type: String
-    },
-  },
+},
   {
     timestamps: true,
   }

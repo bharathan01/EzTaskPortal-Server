@@ -6,6 +6,11 @@ const candidateModule = require("../models/candidate.module.js");
 const asyncTryCatchHandler = require("../utils/asyncTryCatchHandler.js");
 const generateAccessAndRefreshToken = require("../utils/jwtTokenGenerator.js");
 
+const userWithoutSensitiveInfo = (userInfo) => {
+  const { refreshToken, password, ...nonSensitiveUserInfo } = userInfo._doc;
+  return nonSensitiveUserInfo;
+};
+
 const registerNewUser = asyncTryCatchHandler(async (req, res) => {
   const { username, fullname, password, email } = req.body;
   const fields = [username, fullname, password, email];
@@ -19,9 +24,10 @@ const registerNewUser = asyncTryCatchHandler(async (req, res) => {
     email,
   });
   if (!user) {
-    throw new errorHandler(401, "user not created");
+    throw new errorHandler(500, "can't register new user, try after sometime");
   }
-  new ApiResponce(200, user, "user created successfully", res);
+  const userInfo = userWithoutSensitiveInfo(user)
+  new ApiResponce(200, userInfo, "user created successfully", res);
 });
 
 const loginUser = asyncTryCatchHandler(async (req, res) => {
@@ -35,14 +41,13 @@ const loginUser = asyncTryCatchHandler(async (req, res) => {
   }
 
   const loginUser = await candidateModule.findOne(userIdentifier);
-  // .select("-password -refreshToken");
   if (!loginUser) {
     throw new errorHandler(400, "Invalid user creadentials.");
   }
   if (!(await loginUser.validatePassword(password))) {
     throw new errorHandler(400, "Invalid user creadentials.");
   }
-
+  const userInfo = userWithoutSensitiveInfo(loginUser);
   const playloadForToken = {
     _id: loginUser._id,
     username: loginUser.username,
@@ -60,11 +65,10 @@ const loginUser = asyncTryCatchHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET_KEY,
     "1d"
   );
+  userInfo.accessToken = accessToken;
+  userInfo.refreshToken = refreshToken;
 
-  loginUser.accessToken = accessToken;
-  loginUser.refreshToken = refreshToken;
-
-  new ApiResponce(200, loginUser, "success", res);
+  new ApiResponce(200, userInfo, "success", res);
 });
 
 module.exports = { registerNewUser, loginUser };
